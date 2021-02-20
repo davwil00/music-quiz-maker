@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>%TITLE%</title>
+
+    <style>
+      .answer {
+        visibility: hidden;
+      }
+    </style>
+
+    <script>
+      function showAnswers() {
+        Array.from(document.getElementsByClassName('answer')).forEach(elt => elt.style.visibility = 'visible');
+      }
+    </script>
+</head>
+<body>
+    <p>%DESCRIPTION%</p>
+    <ol>
+        <li><audio src="1.mp3" controls></audio><span class="answer">%ARTIST-1% - %TITLE-1%</span></li>
+        <li><audio src="2.mp3" controls></audio><span class="answer">%ARTIST-2% - %TITLE-2%</span></li>
+        <li><audio src="3.mp3" controls></audio><span class="answer">%ARTIST-3% - %TITLE-3%</span></li>
+        <li><audio src="4.mp3" controls></audio><span class="answer">%ARTIST-4% - %TITLE-4%</span></li>
+        <li><audio src="5.mp3" controls></audio><span class="answer">%ARTIST-5% - %TITLE-5%</span></li>
+        <li><audio src="6.mp3" controls></audio><span class="answer">%ARTIST-6% - %TITLE-6%</span></li>
+        <li><audio src="7.mp3" controls></audio><span class="answer">%ARTIST-7% - %TITLE-7%</span></li>
+        <li><audio src="8.mp3" controls></audio><span class="answer">%ARTIST-8% - %TITLE-8%</span></li>
+        <li><audio src="9.mp3" controls></audio><span class="answer">%ARTIST-9% - %TITLE-9%</span></li>
+        <li><audio src="10.mp3" controls></audio><span class="answer">%ARTIST-10% - %TITLE-10%</span></li>
+    </ol>
+    <button onclick="showAnswers()">Show Answers</button>
+</body>
+</html>
+
