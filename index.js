@@ -27,29 +27,37 @@ app.use(express.urlencoded({
 }))
 
 app.get('/', async (req, res) => {
-  reAuthIfNeeded(req, res)
-  res.sendFile(path.join(__dirname, 'public', 'index.html'))
+  const authed = await reAuthIfNeeded(req, res)
+  if (authed) {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'))
+  } else {
+    res.end()
+  }
 })
 
 app.get('/spotify-callback', async (req, res) => {
   // https://example.com/callback?code=NApCCg..BkWtQ&state=profile%2Factivity
   const code = req.query.code
   const {token, refreshToken, expires} = await completeAuth(spotifyApi, code)
+  setCookie(res, {token, refreshToken, expires: new Date().getTime() + expires})
   spotifyApi.setAccessToken(token)
   spotifyApi.setRefreshToken(refreshToken)
-  setCookie({token, refreshToken, expires: new Date().getTime() + expires})
-  res.redirect('/')
+  res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
 
 app.post('/generate', async(req, res) => {
-  reAuthIfNeeded(req, res)
-  let playlistId = req.body.playlistId
-  try {
-    const {zipName, playlistName} = await createQuiz(playlistId)
-    res.download(path.join(__dirname, zipName), `${playlistName.toLowerCase()}.zip`)
-  } catch (err) {
-    console.error(err)
-    res.sendStatus(500)
+  const authed = await reAuthIfNeeded(req, res)
+  if (authed) {
+    let playlistId = req.body.playlistId
+    try {
+      const {zipName, playlistName} = await createQuiz(playlistId)
+      res.download(path.join(__dirname, zipName), `${playlistName.toLowerCase()}.zip`)
+    } catch (err) {
+      console.error(err)
+      res.sendStatus(500)
+    }
+  } else {
+    res.redirect('/')
   }
 })  
 
@@ -71,15 +79,18 @@ async function reAuthIfNeeded(req, res) {
       const {token, expires} = await refreshAccessToken(spotifyApi, tokenData.refreshToken)
       tokenData.token = token
       tokenData.expires = expires
-      setCookie(tokenData)
+      setCookie(res, tokenData)
     }
+    return true
   } else {
     auth(spotifyApi, res)
+    return false
   }
 }
 
 function getTokenData(cookies) {
-  return JSON.parse(cookies.spotifyAccessToken)
+  const tokenData = cookies.spotifyAccessToken
+  return tokenData && JSON.parse(tokenData)
 }
 
 function isTokenValid(tokenData) {
