@@ -2,7 +2,7 @@ const fs = require('fs')
 const axios = require('axios')
 
 exports.downloadTracks = async function(tracks, targetFolder) {
-  tracks.forEach(async (track, i) => {
+  await Promise.all(tracks.map(async (track, i) => {
     if (track.previewUrl) {
       try {
         await downloadTrack(track.previewUrl, i+1, targetFolder)
@@ -12,13 +12,13 @@ exports.downloadTracks = async function(tracks, targetFolder) {
     } else {
       console.log(`Skipping ${track.title} as there is no previewUrl`)
     }
-  })
+  }))
 }
 
 function downloadTrack(url, trackPath, targetFolder) {
   const mp3Location = `${fs.realpathSync(targetFolder)}/${trackPath}.mp3`
   if (fs.existsSync(mp3Location)) {
-    return Promise.resolve
+    return Promise.resolve()
   }
   
   console.log(`Downloading track from ${url} to ${mp3Location}`)

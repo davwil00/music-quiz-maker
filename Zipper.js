@@ -42,8 +42,7 @@ exports.zipFolder = function(name, targetFolder) {
 
     // pipe archive data to the file
     archive.pipe(output);
-    archive.glob('*.html', {cwd:targetFolder})
-    archive.glob('*.mp3', {cwd:targetFolder})
+    archive.directory(targetFolder, false);
     archive.finalize()
   })
 }
