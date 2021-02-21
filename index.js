@@ -42,7 +42,7 @@ app.get('/spotify-callback', async (req, res) => {
   setCookie(res, {token, refreshToken, expires: new Date().getTime() + expires})
   spotifyApi.setAccessToken(token)
   spotifyApi.setRefreshToken(refreshToken)
-  res.sendFile(path.join(__dirname, 'public', 'index.html'))
+  res.redirect('/')
 })
 
 app.post('/generate', async(req, res) => {

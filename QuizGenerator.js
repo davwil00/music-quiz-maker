@@ -14,7 +14,7 @@ exports.createQuiz = async(playlistId) => {
 }
 
 createQuizFromPlaylist = async (playlist) => {
-  const targetFolder = `./rounds/${playlist.name}`
+  const targetFolder = `/tmp/${playlist.name}`
   if (!fs.existsSync(targetFolder)) {
       fs.mkdirSync(targetFolder, {recursive: true})
   }
