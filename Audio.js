@@ -1,6 +1,5 @@
 const fs = require('fs')
 const axios = require('axios')
-const { collect } = require('underscore')
 
 exports.downloadTracks = async function(tracks, targetFolder) {
   tracks.forEach(async (track, i) => {
