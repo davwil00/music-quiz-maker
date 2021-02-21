@@ -51,7 +51,7 @@ app.post('/generate', async(req, res) => {
     let playlistId = req.body.playlistId
     try {
       const {zipName, playlistName} = await createQuiz(playlistId)
-      res.download(path.join(__dirname, zipName), `${playlistName.toLowerCase()}.zip`)
+      res.download(zipName, `${playlistName.toLowerCase()}.zip`)
     } catch (err) {
       console.error(err)
       res.sendStatus(500)

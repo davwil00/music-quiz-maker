@@ -3,7 +3,7 @@ const archiver = require('archiver')
 
 exports.zipFolder = function(name, targetFolder) {
   return new Promise((resolve, reject) => {
-    const zipName = `rounds/${name}.zip`
+    const zipName = `/tmp/${name}.zip`
     const output = fs.createWriteStream(zipName)
     const archive = archiver('zip', {
       zlib: { level: 9 } // Sets the compression level.
