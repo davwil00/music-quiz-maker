@@ -32,7 +32,7 @@ exports.completeAuth = async (spotifyApi, code) => {
 }
 
 exports.refreshAccessToken = async(spotifyApi, refreshToken) => {
-  console.debug(`Refreshing access token ${refreshToken}`)
+  console.debug(`Refreshing access token`)
   spotifyApi.setRefreshToken(refreshToken)
   return spotifyApi.refreshAccessToken()
     .then(data => {
@@ -58,5 +58,21 @@ exports.getPlaylist = async(spotifyApi, playlistId) => {
       title: item.track.name,
       previewUrl: item.track['preview_url']
     }))
+  }
+}
+
+exports.getUsersPlaylists = async(spotifyApi, offset) => {
+  console.debug('Fetching playlists')
+  const response = await spotifyApi.getUserPlaylists({offset})
+  const body = response.body
+  const playlists = body.items.map(playlist => ({
+    id: playlist.id,
+    name: playlist.name
+  }))
+  return {
+    playlists,
+    total: body.total,
+    hasNext: !!body.next,
+    nextOffset: body.offset + body.limit
   }
 }

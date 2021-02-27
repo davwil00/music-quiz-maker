@@ -2,7 +2,7 @@ const express = require('express')
 const cookieParser = require('cookie-parser')
 const path = require('path')
 const SpotifyWebApi = require('spotify-web-api-node')
-const { auth, completeAuth, refreshAccessToken } = require('./Spotify')
+const { auth, completeAuth, refreshAccessToken, getUsersPlaylists } = require('./Spotify')
 const { createQuiz } = require('./QuizGenerator')
 require('dotenv').config()
 
@@ -59,7 +59,20 @@ app.post('/generate', async(req, res) => {
   } else {
     res.redirect('/')
   }
-})  
+})
+
+app.get('/playlists', async(req, res) => {
+  const authed = await reAuthIfNeeded(req, res)
+  if (authed) {
+    const offset = req.query.offset
+    const result = await getUsersPlaylists(spotifyApi, offset)
+    res.json(result)
+  } else {
+    res.redirect('/')
+  }
+})
+
+app.use(express.static('public'))
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
